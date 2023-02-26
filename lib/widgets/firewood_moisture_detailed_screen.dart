@@ -1,18 +1,11 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:datetime_picker_formfield_new/datetime_picker_formfield_new.dart';
-import 'package:path_provider/path_provider.dart';
-
 import '../helpers/custom_data.dart';
 import '../models/graph_axis.dart';
 import '../providers/https_protocol.dart';
 import '../screens/firewood_moisture_screen.dart';
-import '../screens/home_screen.dart';
-import './search_toggle_view.dart';
 import './tank_graph.dart';
-import 'generate_excel_from_list.dart';
 
 class FirewoodMoistureDetailedScreen extends StatefulWidget {
   const FirewoodMoistureDetailedScreen(
@@ -42,40 +35,10 @@ class FirewoodMoistureDetailedScreen extends StatefulWidget {
 
 class _FirewoodMoistureDetailedScreenState
     extends State<FirewoodMoistureDetailedScreen> {
-  final _fromController = TextEditingController();
-  final _toController = TextEditingController();
 
   final _dateTimeController = TextEditingController();
   final _moistureLevelController = TextEditingController();
   var _selectedDateAndTime = '';
-
-  static const keyMain = "Datetime";
-  static const key1 = "Moisture Level (%)";
-  void _generateExcel() async {
-    widget.changeLoadingStatus(true);
-    List graphDataCombination = [];
-    for (var element in graphData) {
-      graphDataCombination.add({keyMain: element.x, key1: element.y});
-    }
-    try {
-      final fileBytes = await GenerateExcelFromList(
-        listData: graphDataCombination,
-        keyMain: keyMain,
-        key1: key1,
-      ).generateExcel();
-      var directory = await getApplicationDocumentsDirectory();
-      File(
-          ("${directory.path}/CBES/${HomeScreen.pageTitle(PageTitle.firewoodMoisture)}/${widget.pageData.keys.first}/${DateFormat(GenerateExcelFromList.excelFormat).format(DateTime.now())}.xlsx"))
-        ..createSync(recursive: true)
-        ..writeAsBytesSync(fileBytes);
-      Future.delayed(Duration.zero).then((value) async =>
-          await customDialog(context, "Excel file generated successfully"));
-    } catch (e) {
-      await customDialog(context, "Error generating Excel file");
-    } finally {
-      widget.changeLoadingStatus(false);
-    }
-  }
   @override
   void dispose() {
     super.dispose();

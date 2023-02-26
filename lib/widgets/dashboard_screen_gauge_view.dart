@@ -9,9 +9,13 @@ import './radial_gauge_sf.dart';
 
 class DashboardScreenGaugeView extends StatelessWidget {
   const DashboardScreenGaugeView(
-      {Key? key, required this.switchDashboardPage, required this.cons})
+      {Key? key,
+      required this.switchDashboardPage,
+      required this.cons,
+      required this.openPage})
       : super(key: key);
   final Function switchDashboardPage;
+  final Function openPage;
   final BoxConstraints cons;
 
   static final bdRadius = BorderRadius.circular(10);
@@ -49,34 +53,21 @@ class DashboardScreenGaugeView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Widget cardView(String title, Widget? child, BoxConstraints cons) =>
+    Widget cardView(PageTitle title, Widget? child, BoxConstraints cons) =>
         GestureDetector(
-          onDoubleTap: () {
-            if (title == HomeScreen.pageTitle(PageTitle.solarHeaterMeter)) {
-              switchDashboardPage(PageTitle.solarHeaterMeter,
-                  HomeScreen.pageTitle(PageTitle.solarHeaterMeter));
-            }
-            if (title == HomeScreen.pageTitle(PageTitle.ambientMeter)) {
-              switchDashboardPage(PageTitle.ambientMeter,
-                  HomeScreen.pageTitle(PageTitle.ambientMeter));
-            }
-            if (title == HomeScreen.pageTitle(PageTitle.flowMeter)) {
-              switchDashboardPage(PageTitle.flowMeter,
-                  HomeScreen.pageTitle(PageTitle.flowMeter));
-            }
-            if (title ==
-                HomeScreen.pageTitle(PageTitle.electricalEnergyMeter)) {
-              switchDashboardPage(PageTitle.electricalEnergyMeter,
-                  HomeScreen.pageTitle(PageTitle.electricalEnergyMeter));
-            }
-            if (title == HomeScreen.pageTitle(PageTitle.ductMeter)) {
-              switchDashboardPage(PageTitle.ductMeter,
-                  HomeScreen.pageTitle(PageTitle.ductMeter));
-            }
-            if (title == HomeScreen.pageTitle(PageTitle.shedMeter)) {
-              switchDashboardPage(PageTitle.shedMeter,
-                  HomeScreen.pageTitle(PageTitle.shedMeter));
-            }
+          onTap: () {
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (_) => SafeArea(
+                    child: Scaffold(
+                      appBar: AppBar(
+                        title: Text(HomeScreen.pageTitle(title)),
+                      ),
+                      body: openPage(title),
+                    ),
+                  ),
+                ));
           },
           child: Container(
             width: double.infinity,
@@ -99,7 +90,7 @@ class DashboardScreenGaugeView extends StatelessWidget {
                           color: Colors.white, borderRadius: bdRadius),
                       child: Center(
                         child: Text(
-                          title,
+                          HomeScreen.pageTitle(title),
                           style: TextStyle(
                               fontSize: 18.0,
                               letterSpacing: 2.0,
@@ -124,7 +115,7 @@ class DashboardScreenGaugeView extends StatelessWidget {
           child: Column(
             children: [
               cardView(
-                  HomeScreen.pageTitle(PageTitle.solarHeaterMeter),
+                  PageTitle.solarHeaterMeter,
                   _gaugeView([
                     {
                       'data': mqttProv.heatingUnitData?.tank1 ?? '_._',
@@ -144,7 +135,7 @@ class DashboardScreenGaugeView extends StatelessWidget {
                   ], cons.maxWidth),
                   cons),
               cardView(
-                  HomeScreen.pageTitle(PageTitle.flowMeter),
+                  PageTitle.flowMeter,
                   _gaugeView([
                     {
                       'data': mqttProv.heatingUnitData?.flow2 ?? '_._',
@@ -159,23 +150,7 @@ class DashboardScreenGaugeView extends StatelessWidget {
                   ], cons.maxWidth),
                   cons),
               cardView(
-                  HomeScreen.pageTitle(PageTitle.electricalEnergyMeter),
-                  _gaugeView([
-                    {
-                      'data':
-                          mqttProv.electricalEnergyData?.outputEnergy ?? '_._',
-                      'title': 'Output Power',
-                      ...DashboardScreen.powerConfig
-                    },
-                    {
-                      'data': mqttProv.electricalEnergyData?.pvEnergy ?? '_._',
-                      'title': 'Pv Power',
-                      ...DashboardScreen.powerConfig
-                    },
-                  ], cons.maxWidth),
-                  cons),
-              cardView(
-                  HomeScreen.pageTitle(PageTitle.ductMeter),
+                  PageTitle.ductMeter,
                   _gaugeView([
                     {
                       'data': mqttProv.ductMeterData?.temperature ?? '_._',
@@ -190,22 +165,7 @@ class DashboardScreenGaugeView extends StatelessWidget {
                   ], cons.maxWidth),
                   cons),
               cardView(
-                  HomeScreen.pageTitle(PageTitle.shedMeter),
-                  _gaugeView([
-                    {
-                      'data': mqttProv.shedMeterData?.temperature ?? '_._',
-                      'title': 'Temperature',
-                      ...DashboardScreen.temperatureConfig
-                    },
-                    {
-                      'data': mqttProv.shedMeterData?.humidity ?? '_._',
-                      'title': 'Humidity',
-                      ...DashboardScreen.humidityConfig
-                    },
-                  ], cons.maxWidth),
-                  cons),
-              cardView(
-                  HomeScreen.pageTitle(PageTitle.ambientMeter),
+                  PageTitle.ambientMeter,
                   _gaugeView([
                     {
                       'data': (mqttProv.heatingUnitData?.ambientTemp)
@@ -227,6 +187,56 @@ class DashboardScreenGaugeView extends StatelessWidget {
                           '_._',
                       'title': 'A.Irradiance',
                       ...DashboardScreen.irradianceConfig
+                    },
+                  ], cons.maxWidth),
+                  cons),
+              cardView(
+                  PageTitle.shedMeter,
+                  _gaugeView([
+                    {
+                      'data': mqttProv.shedMeterData?.temperature ?? '_._',
+                      'title': 'Temperature',
+                      ...DashboardScreen.temperatureConfig
+                    },
+                    {
+                      'data': mqttProv.shedMeterData?.humidity ?? '_._',
+                      'title': 'Humidity',
+                      ...DashboardScreen.humidityConfig
+                    },
+                  ], cons.maxWidth),
+                  cons),
+              cardView(
+                  PageTitle.electricalEnergyMeter,
+                  _gaugeView([
+                    {
+                      'data':
+                          mqttProv.electricalEnergyData?.outputEnergy ?? '_._',
+                      'title': 'Output Power',
+                      ...DashboardScreen.powerConfig
+                    },
+                    {
+                      'data': mqttProv.electricalEnergyData?.pvEnergy ?? '_._',
+                      'title': 'Pv Power',
+                      ...DashboardScreen.powerConfig
+                    },
+                  ], cons.maxWidth),
+                  cons),
+              cardView(
+                  PageTitle.thermalEnergyMeter,
+                  _gaugeView([
+                    {
+                      'data': mqttProv.heatingUnitData?.waterEnthalpy!
+                              .toStringAsFixed(1) ??
+                          '_._',
+                      'title': 'Water Thermal Energy',
+                      ...DashboardScreen.powerConfig
+                    },
+                    {
+                      'title': 'Pv Thermal Energy',
+                      'data': mqttProv.heatingUnitData?.pvEnthalpy
+                              .toStringAsFixed(1) ??
+                          '_._',
+                      ...DashboardScreen.powerConfig
                     },
                   ], cons.maxWidth),
                   cons),

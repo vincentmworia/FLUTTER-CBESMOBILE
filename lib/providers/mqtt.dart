@@ -116,7 +116,9 @@ class MqttProvider with ChangeNotifier {
       ..withWillQos(MqttQos.exactlyOnce);
 
     _mqttClient = MqttServerClient.withPort(
-        mqttHost, 'flutter_client/$_deviceId', mqttPort)
+        mqttHost,
+        'flutter_client/$_devicesClient/${DateTime.now().toIso8601String()}',
+        mqttPort)
       ..secure = true
       ..securityContext = SecurityContext.defaultContext
       ..keepAlivePeriod = 30

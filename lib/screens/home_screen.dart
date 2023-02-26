@@ -66,8 +66,6 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   PageTitle _page = PageTitle.dashboard;
   String _pageTitle = 'Dashboard';
-  var _deCompressNavPlane = true;
-  var _showNavPlane = false;
 
   final Connectivity _connectivity = Connectivity();
   StreamSubscription<ConnectivityResult>? _connectivitySubscription;
@@ -98,17 +96,13 @@ class _HomeScreenState extends State<HomeScreen> {
     setState(() {
       _page = page;
       _pageTitle = title;
-      if (_page == PageTitle.dashboard) {
-        _showNavPlane = false;
-        _deCompressNavPlane = true;
-      }
     });
   }
 
   Widget _pageWidget(PageTitle page) {
     switch (page) {
       case PageTitle.dashboard:
-        return DashboardScreen(switchDashboardPage: _switchPage);
+        return DashboardScreen(switchDashboardPage: _switchPage,openPage: _pageWidget);
       case PageTitle.solarHeaterMeter:
         return const HeatingUnitScreen();
       case PageTitle.ambientMeter:
@@ -133,7 +127,6 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    const duration = Duration(milliseconds: 20);
     return SafeArea(
       child: Scaffold(
         drawer: Drawer(
@@ -146,30 +139,7 @@ class _HomeScreenState extends State<HomeScreen> {
           title: Text(_pageTitle),
         ),
         backgroundColor: Colors.white,
-        body: Row(
-          children: [
-            AnimatedContainer(
-              duration: duration,
-              width: _deCompressNavPlane ? 0 : 130,
-              height: double.infinity,
-              color: Theme.of(context).colorScheme.primary.withOpacity(0.99),
-              child: Visibility(
-                visible: _showNavPlane,
-                child: NavBarPlane(
-                  switchPage: _switchPage,
-                  pageTitle: _page,
-                ),
-              ),
-            ),
-            Expanded(
-              child: SizedBox(
-                width: double.infinity,
-                height: double.infinity,
-                child: _pageWidget(_page),
-              ),
-            ),
-          ],
-        ),
+        body: _pageWidget(_page),
       ),
     );
   }

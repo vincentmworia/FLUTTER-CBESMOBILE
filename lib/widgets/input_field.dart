@@ -80,7 +80,7 @@ class _InputFieldState extends State<InputField> {
           // focusedBorder:
           //     _outlinedInputBorder(Theme.of(context).colorScheme.primary),
           // enabledBorder: _outlinedInputBorder(Colors.grey),
-          contentPadding: const EdgeInsets.symmetric(vertical: 20.0),
+          contentPadding: const EdgeInsets.symmetric(vertical: 10.0),
           constraints: BoxConstraints(
             maxWidth: inputWidth,
             minWidth: inputWidth,

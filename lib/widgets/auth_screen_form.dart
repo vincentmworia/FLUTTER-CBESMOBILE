@@ -78,7 +78,6 @@ class _AuthScreenFormState extends State<AuthScreenForm> {
 
   @override
   Widget build(BuildContext context) {
-    final deviceWidth = MediaQuery.of(context).size.width;
     const spacing = SizedBox(height: 20);
 
     return Form(

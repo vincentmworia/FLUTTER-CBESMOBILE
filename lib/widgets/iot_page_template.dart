@@ -2,30 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../providers/mqtt.dart';
 
-import 'loading_animation.dart';
-
 class IotPageTemplate extends StatefulWidget {
   const IotPageTemplate({
     Key? key,
     required this.gaugePart,
     required this.graphPart,
-    required this.onlineBnStatus,
-    required this.generateExcel,
-    required this.fromController,
-    required this.toController,
-    required this.searchDatabase,
-    required this.loadingStatus,
-    required this.activateExcel,
   }) : super(key: key);
   final Widget gaugePart;
   final Widget graphPart;
-  final Function onlineBnStatus;
-  final Function generateExcel;
-  final Function? searchDatabase;
-  final TextEditingController fromController;
-  final TextEditingController toController;
-  final bool loadingStatus;
-  final bool activateExcel;
 
   @override
   State<IotPageTemplate> createState() => _IotPageTemplateState();
@@ -58,7 +42,6 @@ class _IotPageTemplateState extends State<IotPageTemplate> {
                     ),
                   ));
         }),
-        if (widget.loadingStatus) const MyLoadingAnimation()
       ],
     );
   }

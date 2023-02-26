@@ -3,10 +3,12 @@ import 'package:flutter/material.dart';
 import '../widgets/dashboard_screen_gauge_view.dart';
 import '../widgets/dashboard_screen_scada.dart';
 
-class DashboardScreen extends StatefulWidget {
-  const DashboardScreen({Key? key, required this.switchDashboardPage})
+class DashboardScreen extends StatelessWidget {
+  const DashboardScreen(
+      {Key? key, required this.switchDashboardPage, required this.openPage})
       : super(key: key);
   final Function switchDashboardPage;
+  final Function openPage;
   static const temperatureConfig = {
     'units': '°C',
     'minValue': 0.0,
@@ -44,25 +46,20 @@ class DashboardScreen extends StatefulWidget {
   };
 
   @override
-  State<DashboardScreen> createState() => _DashboardScreenState();
-}
-
-class _DashboardScreenState extends State<DashboardScreen> {
-  var _scadaView = true;
-
-  @override
   Widget build(BuildContext context) {
     final orientation = MediaQuery.of(context).orientation;
-    _scadaView = orientation == Orientation.landscape;
+    final scadaView = orientation == Orientation.landscape;
     return LayoutBuilder(
         builder: (builder, cons) => SizedBox(
               width: cons.maxWidth,
               height: cons.maxHeight,
-              child: _scadaView
+              child: scadaView
                   ? DashboardScreenScada(cons: cons)
                   : DashboardScreenGaugeView(
-                      switchDashboardPage: widget.switchDashboardPage,
-                      cons: cons),
+                      switchDashboardPage: switchDashboardPage,
+                      cons: cons,
+                      openPage: openPage,
+                    ),
             ));
   }
 }

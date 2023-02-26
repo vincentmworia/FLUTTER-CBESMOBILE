@@ -24,44 +24,37 @@ class _NavBarPlaneState extends State<NavBarPlane> {
   PageTitle? _activePage;
 
   Widget _planeItem(PageTitle page, IconData icon) {
-    const activeClr = Colors.lightGreenAccent;
-    const inactiveClr = Colors.white;
-    return GestureDetector(
-        onTap: () {
-          setState(() {
-            _activePage = page;
-          });
-
-          widget.switchPage(page, HomeScreen.pageTitle(page));
-          Navigator.pop(context);
-        },
-        child: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 2),
-          height: MediaQuery.of(context).size.height * 0.1,
-          width: double.infinity,
-          color: Theme.of(context).colorScheme.secondary,
-          margin: const EdgeInsets.only(bottom: 2),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Icon(
-                icon,
-                color: _activePage == page ? activeClr : inactiveClr,
-              ),
-              Text(
-                // 'k',
-                HomeScreen.pageTitle(page),
-                textAlign: TextAlign.center,
-                overflow: TextOverflow.clip,
-                style: TextStyle(
-                  // fontSize: 1,
-                  color: _activePage == page ? activeClr : inactiveClr,
-                ),
-              ),
-            ],
+    final activeClr = Theme.of(context).colorScheme.primary;
+    final inactiveClr = Theme.of(context).colorScheme.secondary.withOpacity(0.75);
+    // final inactiveClr = Theme.of(context).colorScheme.primary.withOpacity(0.2);
+    return Column(
+      children: [
+        ListTile(
+          leading: Icon(
+            icon,
+            color:_activePage == page ? activeClr : inactiveClr,
           ),
-        ));
+          title: Text(
+            HomeScreen.pageTitle(page),
+            textAlign: TextAlign.start,
+            overflow: TextOverflow.clip,
+            style: TextStyle(
+              // fontSize: 1,
+              color: _activePage == page ? activeClr : inactiveClr,
+            ),
+          ),
+          onTap: () {
+            setState(() {
+              _activePage = page;
+            });
+
+            widget.switchPage(page, HomeScreen.pageTitle(page));
+            Navigator.pop(context);
+          },
+        ),
+        const Divider(),
+      ],
+    );
   }
 
   @override
@@ -84,18 +77,13 @@ class _NavBarPlaneState extends State<NavBarPlane> {
         children: [
           UserAccountsDrawerHeader(
             currentAccountPicture: CircleAvatar(
-              backgroundColor: Colors.white70,
-              child: Center(
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Text(
-                    '${LoginUserData.getLoggedUser!.firstname[0]} ',
-                    style: TextStyle(
-                        fontSize: 30.0,
-                        fontWeight: FontWeight.bold,
-                        color: Theme.of(context).colorScheme.primary),
-                  ),
-                ),
+              backgroundColor: Colors.white,
+              child: Text(
+                '${LoginUserData.getLoggedUser!.firstname[0]} ',
+                style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 30,
+                    color: Theme.of(context).colorScheme.primary),
               ),
             ),
             accountName: Text(
